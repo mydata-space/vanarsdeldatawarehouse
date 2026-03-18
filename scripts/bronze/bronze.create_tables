@@ -1,0 +1,150 @@
+/*
+========================================================
+Bronze Layer Tables
+========================================================
+Script Purpose:
+	This script create table for bronze layer. It checks
+	if the table already exist then create a new table
+	in the DataBase 'vanarsdelwarehouse'.
+
+========================================================
+*/
+
+-- -------------------------
+-- CRM
+-- -------------------------
+IF OBJECT_ID('bronze.crm_australia','U') IS NOT NULL
+	DROP TABLE bronze.crm_australia;
+CREATE TABLE bronze.crm_australia
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50)
+	);
+
+IF OBJECT_ID('bronze.crm_canada','U') IS NOT NULL
+	DROP TABLE bronze.crm_canada;
+CREATE TABLE bronze.crm_canada
+	(
+	ProductID INT,
+	Date DATE,
+	Zip NVARCHAR(50),
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50)
+	);
+
+IF OBJECT_ID('bronze.crm_germany','U') IS NOT NULL
+	DROP TABLE bronze.crm_germany;
+CREATE TABLE bronze.crm_germany
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50)
+	);
+
+IF OBJECT_ID('bronze.crm_japan','U') IS NOT NULL
+	DROP TABLE bronze.crm_japan;
+CREATE TABLE bronze.crm_japan
+	(
+	ProductID INT,
+	Date DATE,
+	Zip NVARCHAR(50),
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50)
+	);
+
+IF OBJECT_ID('bronze.crm_mexico','U') IS NOT NULL
+	DROP TABLE bronze.crm_mexico;
+CREATE TABLE bronze.crm_mexico
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50)
+	);
+
+IF OBJECT_ID('bronze.crm_nigeria','U') IS NOT NULL
+	DROP TABLE bronze.crm_nigeria;
+CREATE TABLE bronze.crm_nigeria
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50)
+	);
+
+-- -------------------------
+-- ERP 
+-- -------------------------
+IF OBJECT_ID('bronze.erp_geo','U') IS NOT NULL
+	DROP TABLE bronze.erp_geo;
+CREATE TABLE bronze.erp_geo
+	(
+	Zip NVARCHAR(50),
+	City NVARCHAR(50),
+	State NVARCHAR(50),
+	Region NVARCHAR(50),
+	District NVARCHAR(50),
+	Country NVARCHAR(50)
+	);
+
+IF OBJECT_ID('bronze.erp_manufacturer','U') IS NOT NULL
+	DROP TABLE bronze.erp_manufacturer;
+CREATE TABLE bronze.erp_manufacturer
+	(
+	Column1 NVARCHAR(500),
+	Column2 NVARCHAR(500),
+	Column3 NVARCHAR(500),
+	Column4 NVARCHAR(500),
+	Column5 NVARCHAR(500),
+	Column6 NVARCHAR(500),
+	Column7 NVARCHAR(500),
+	Column8 NVARCHAR(500),
+	Column9 NVARCHAR(500),
+	Column10 NVARCHAR(500),
+	Column11 NVARCHAR(500),
+	Column12 NVARCHAR(500),
+	Column13 NVARCHAR(500),
+	Column14 NVARCHAR(500),
+	Column15 NVARCHAR(500)
+	);
+
+IF OBJECT_ID('bronze.erp_product','U') IS NOT NULL
+	DROP TABLE bronze.erp_product;
+CREATE TABLE bronze.erp_product
+	(
+	ProductID INT,
+	Product NVARCHAR(50),
+	Category NVARCHAR(50),
+	ManufacturerID INT,
+	Price NVARCHAR(50)
+	);
+
+IF OBJECT_ID('bronze.erp_sales','U') IS NOT NULL
+	DROP TABLE bronze.erp_sales;
+CREATE TABLE bronze.erp_sales
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2)
+	);
+
+
+
+
+
+
