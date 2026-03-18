@@ -1,0 +1,46 @@
+/*
+========================================================
+Create DataBase and Schemas
+========================================================
+Script Purpose:
+	This cripts create database and the three schamas for 
+	bronze, silve and gold.
+	It checks if the objects already exist before creating
+	the database 'vanarsdelwarehouse' and the schemas.
+	
+========================================================
+*/
+ 
+USE 
+master;
+GO
+
+-- Drop and recreate database vanarsdeldatawarehouse;
+IF EXISTS (SELECT 1 FROM sys.databases WHERE NAME = 'vanarsdeldatawarehouse')
+BEGIN 
+	ALTER DATABASE vanarsdeldatawarehouse SET SINGLE_USER  WITH ROLLBACK IMMEDIATE ;
+	DROP DATABASE vanarsdeldatawarehouse; 
+END
+
+-- Create database
+CREATE DATABASE vanarsdeldatawarehouse;
+
+-- Use Database vanarsdeldatawarehouse;
+USE 
+vanarsdeldatawarehouse;
+GO
+
+-- Create Schemas 'bronze,silver and gold'
+CREATE SCHEMA bronze;
+GO
+
+CREATE SCHEMA silver;
+GO
+
+CREATE SCHEMA gold;
+GO
+
+
+
+
+
