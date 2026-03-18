@@ -1,0 +1,179 @@
+/*
+========================================================
+Store Procedure : Load Bronze Layer Data
+========================================================
+Script Purpose:
+	This SP script loads data into bronze layer table using
+	bulk insert.  
+
+========================================================
+*/
+
+CREATE OR ALTER PROCEDURE bronze.load_tables AS
+BEGIN
+	DECLARE @batchload_starttime DATETIME, @batchload_endtime DATETIME
+	BEGIN  TRY 
+		PRINT'=======================================';
+		PRINT'Loading Data Into Bronze Layers Tables';
+		PRINT'=======================================';
+		SET @batchload_starttime = GETDATE()
+		PRINT'';
+		PRINT'CRM';
+		PRINT'----------------------------------------';
+		PRINT'>>';
+		PRINT'Truncate Table bronze.crm_australia';
+		TRUNCATE TABLE bronze.crm_australia;
+		PRINT'Inserting Data Into bronze.crm_australia';
+		BULK INSERT bronze.crm_australia
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\crm\Australia.csv'
+		WITH
+			(
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+			);
+
+		PRINT'';
+		PRINT'Truncate Table bronze.crm_canada';
+		TRUNCATE TABLE bronze.crm_canada;
+		PRINT'Inserting Data Into bronze.crm_canada';
+		BULK INSERT bronze.crm_canada
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\crm\Canada.csv'
+		WITH 
+			(
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+			);
+
+		PRINT'';
+		PRINT'Truncate Table bronze.crm_germany';
+		TRUNCATE TABLE bronze.crm_germany;
+		PRINT'Inserting Data Into bronze.crm_germany';
+		BULK INSERT bronze.crm_germany
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\crm\Germany.csv'
+		WITH 
+			(
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+			);
+
+		PRINT'';
+		PRINT'Truncate Table bronze.crm_japan';
+		TRUNCATE TABLE bronze.crm_japan;
+		PRINT'Inserting Data Into bronze.crm_japan';
+		BULK INSERT bronze.crm_japan
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\crm\Japan.csv'
+		WITH 
+			(
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+			);
+
+		PRINT'';
+		PRINT'Truncate Table bronze.crm_mexico';
+		TRUNCATE TABLE bronze.crm_mexico;
+		PRINT'Inserting Data Into bronze.crm_mexico';
+		BULK INSERT bronze.crm_mexico
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\crm\Mexico.csv'
+		WITH 
+			(
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+			);
+
+		PRINT'';
+		PRINT'Truncate Table bronze.crm_nigeria';
+		TRUNCATE TABLE bronze.crm_nigeria;
+		PRINT'Inserting Data Into bronze.crm_nigeria';
+		BULK INSERT bronze.crm_nigeria
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\crm\Nigeria.csv'
+		WITH 
+			(
+			FIRSTROW = 2,
+			FIELDTERMINATOR = ',',
+			TABLOCK
+			);
+
+		PRINT'';
+		PRINT'ERP';
+		PRINT'----------------------------------------';
+		PRINT'>>';
+		PRINT'Truncate Table bronze.erp_geo';
+		TRUNCATE TABLE bronze.erp_geo;
+		PRINT'Inserting Data Into bronze.erp_geo';
+		BULK INSERT bronze.erp_geo
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\geo.csv'
+		WITH
+			(
+			FIRSTROW = 2,
+			FORMAT = 'CSV',
+			FIELDQUOTE ='"',
+			TABLOCK
+			);
+ 
+		PRINT'';
+		PRINT'Truncate Table bronze.erp_manufacturer';
+		TRUNCATE TABLE bronze.erp_manufacturer;
+		PRINT'Inserting Data Into bronze.erp_manufacturer';
+		BULK INSERT bronze.erp_manufacturer
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\manufacturer.csv'
+		WITH
+			(
+			FIRSTROW = 2,
+			FORMAT = 'CSV',
+			FIELDQUOTE ='"',
+			TABLOCK
+			);
+
+		PRINT'';
+		-- PRINT'Truncate Table bronze.erp_product';
+		TRUNCATE TABLE bronze.erp_product;
+		-- PRINT'Inserting Data Into bronze.erp_product';
+		BULK INSERT bronze.erp_product
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\product.csv'
+		WITH
+			(
+			FIRSTROW = 3,
+			FORMAT = 'CSV',
+			FIELDQUOTE ='"',
+			TABLOCK
+			);
+ 
+		PRINT'';
+		PRINT'Truncate Table bronze.erp_sales';
+		TRUNCATE TABLE bronze.erp_sales;
+		PRINT'Inserting Data Into bronze.erp_sales';
+		BULK INSERT bronze.erp_sales
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\sales.csv'
+		WITH
+			(
+			FIRSTROW = 2,
+			FORMAT = 'CSV',
+			FIELDQUOTE ='"',
+			TABLOCK
+			);
+			SET @batchload_endtime = GETDATE()
+			PRINT'Loading Duration' + CAST(DATEDIFF(SECOND,@batchload_starttime,@batchload_endtime) AS NVARCHAR) + 'seconds';
+	END TRY
+	BEGIN CATCH 
+		PRINT'ERROR TYPE' + ERROR_MESSAGE();
+		PRINT'ERROR TYPE' + CAST(ERROR_NUMBER() AS NVARCHAR);
+		PRINT'ERROR TYPE' + CAST(ERROR_STATE() AS NVARCHAR);
+	END CATCH 
+END
+
+
+
+
+
+ 
+ 
+
+
+
+
+
