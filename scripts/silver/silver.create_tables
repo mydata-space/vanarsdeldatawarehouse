@@ -1,0 +1,149 @@
+/*
+========================================================
+Silver Layer Tables
+========================================================
+Script Purpose:
+	This script create tables for silver layer. It checks
+	if the table already exist then create a new tables
+	in the DataBase 'vanarsdelwarehouse'.
+
+	furthermore, dwt metadata was added to track date and
+	time of loading data  into tables. 
+
+========================================================
+*/
+
+-- -------------------------
+-- CRM
+-- -------------------------
+IF OBJECT_ID('silver.crm_australia','U') IS NOT NULL
+	DROP TABLE silver.crm_australia;
+CREATE TABLE silver.crm_australia
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50),
+	dwt DATETIME 
+	);
+
+IF OBJECT_ID('silver.crm_canada','U') IS NOT NULL
+	DROP TABLE silver.crm_canada;
+CREATE TABLE silver.crm_canada
+	(
+	ProductID INT,
+	Date DATE,
+	Zip NVARCHAR(50),
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50),
+	dwt DATETIME 
+	);
+
+IF OBJECT_ID('silver.crm_germany','U') IS NOT NULL
+	DROP TABLE silver.crm_germany;
+CREATE TABLE silver.crm_germany
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50),
+	dwt DATETIME 
+	);
+
+IF OBJECT_ID('silver.crm_japan','U') IS NOT NULL
+	DROP TABLE silver.crm_japan;
+CREATE TABLE silver.crm_japan
+	(
+	ProductID INT,
+	Date DATE,
+	Zip NVARCHAR(50),
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50),
+	dwt DATETIME 
+	);
+
+IF OBJECT_ID('silver.crm_mexico','U') IS NOT NULL
+	DROP TABLE silver.crm_mexico;
+CREATE TABLE silver.crm_mexico
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50),
+	dwt DATETIME 
+	);
+
+IF OBJECT_ID('silver.crm_nigeria','U') IS NOT NULL
+	DROP TABLE silver.crm_nigeria;
+CREATE TABLE silver.crm_nigeria
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50),
+	dwt DATETIME 
+	);
+
+-- -------------------------
+-- ERP 
+-- -------------------------
+IF OBJECT_ID('silver.erp_geo','U') IS NOT NULL
+	DROP TABLE silver.erp_geo;
+CREATE TABLE silver.erp_geo
+	(
+	Zip NVARCHAR(50),
+	City NVARCHAR(50),
+	State NVARCHAR(50),
+	Region NVARCHAR(50),
+	District NVARCHAR(50),
+	Country NVARCHAR(50),
+	dwt DATETIME 
+	);
+
+IF OBJECT_ID('silver.erp_manufacturers','U') IS NOT NULL
+	DROP TABLE silver.erp_manufacturers;
+CREATE TABLE silver.erp_manufacturers
+	(
+	ManufacturerID INT,
+	Manufacturer NVARCHAR(50),
+	Logo NVARCHAR(500),
+	dwt DATETIME 
+	);
+
+IF OBJECT_ID('silver.erp_products','U') IS NOT NULL
+	DROP TABLE silver.erp_products;
+CREATE TABLE silver.erp_products
+	(
+	ProductID INT,
+	Product NVARCHAR(50),
+	Category NVARCHAR(50),
+	ManufacturerID INT,
+	Price NVARCHAR(50),
+	dwt DATETIME 
+	);
+
+IF OBJECT_ID('silver.erp_sales','U') IS NOT NULL
+	DROP TABLE silver.erp_sales;
+CREATE TABLE silver.erp_sales
+	(
+	ProductID INT,
+	Date DATE,
+	Zip INT,
+	Units INT,
+	Revenue DECIMAL(12,2),
+	dwt DATETIME 
+	);
+
+
+
+
