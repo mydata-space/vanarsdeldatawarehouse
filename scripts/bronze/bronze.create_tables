@@ -100,25 +100,13 @@ CREATE TABLE bronze.erp_geo
 	Country NVARCHAR(50)
 	);
 
-IF OBJECT_ID('bronze.erp_manufacturer','U') IS NOT NULL
-	DROP TABLE bronze.erp_manufacturer;
-CREATE TABLE bronze.erp_manufacturer
+IF OBJECT_ID('bronze.erp_manufacturers','U') IS NOT NULL
+	DROP TABLE bronze.erp_manufacturers;
+CREATE TABLE bronze.erp_manufacturers
 	(
-	Column1 NVARCHAR(500),
-	Column2 NVARCHAR(500),
-	Column3 NVARCHAR(500),
-	Column4 NVARCHAR(500),
-	Column5 NVARCHAR(500),
-	Column6 NVARCHAR(500),
-	Column7 NVARCHAR(500),
-	Column8 NVARCHAR(500),
-	Column9 NVARCHAR(500),
-	Column10 NVARCHAR(500),
-	Column11 NVARCHAR(500),
-	Column12 NVARCHAR(500),
-	Column13 NVARCHAR(500),
-	Column14 NVARCHAR(500),
-	Column15 NVARCHAR(500)
+	ManufacturerID INT,
+	Manufacturer NVARCHAR(50),
+	Logo NVARCHAR(500) 
 	);
 
 IF OBJECT_ID('bronze.erp_product','U') IS NOT NULL
@@ -142,8 +130,6 @@ CREATE TABLE bronze.erp_sales
 	Units INT,
 	Revenue DECIMAL(12,2)
 	);
-
-
 
 
 
