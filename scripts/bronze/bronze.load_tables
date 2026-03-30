@@ -1,10 +1,12 @@
 /*
 ========================================================
-Store Procedure : Load Bronze Layer Data
+Store Procedure : Load Data Into Bronze Layer 
 ========================================================
 Script Purpose:
-	This SP script loads data into bronze layer table using
-	bulk insert.  
+	This SP script loads data into bronze layer tables using
+	bulk insert.
+	
+	the script check the time and controls possible errors  
 
 ========================================================
 */
@@ -149,7 +151,7 @@ BEGIN
 		PRINT'';
 		PRINT'Truncate Table bronze.erp_sales';
 		TRUNCATE TABLE bronze.erp_sales;
-		-- PRINT'Inserting Data Into bronze.erp_sales';
+		PRINT'Inserting Data Into bronze.erp_sales';
 		BULK INSERT bronze.erp_sales
 		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\sales.csv'
 		WITH
