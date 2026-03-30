@@ -109,9 +109,9 @@ CREATE TABLE bronze.erp_manufacturers
 	Logo NVARCHAR(500) 
 	);
 
-IF OBJECT_ID('bronze.erp_product','U') IS NOT NULL
-	DROP TABLE bronze.erp_product;
-CREATE TABLE bronze.erp_product
+IF OBJECT_ID('bronze.erp_products','U') IS NOT NULL
+	DROP TABLE bronze.erp_products;
+CREATE TABLE bronze.erp_products
 	(
 	ProductID INT,
 	Product NVARCHAR(50),
