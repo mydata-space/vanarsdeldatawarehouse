@@ -32,7 +32,7 @@ BEGIN
 			FIELDTERMINATOR = ',',
 			TABLOCK
 			);
-
+		
 		PRINT'';
 		PRINT'Truncate Table bronze.crm_canada';
 		TRUNCATE TABLE bronze.crm_canada;
@@ -116,25 +116,28 @@ BEGIN
 			);
  
 		PRINT'';
-		PRINT'Truncate Table bronze.erp_manufacturer';
-		TRUNCATE TABLE bronze.erp_manufacturer;
-		PRINT'Inserting Data Into bronze.erp_manufacturer';
-		BULK INSERT bronze.erp_manufacturer
-		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\manufacturer.csv'
+		PRINT'Truncate Table bronze.erp_manufacturers';
+		TRUNCATE TABLE bronze.erp_manufacturers;
+		-- PRINT'Inserting Data Into bronze.erp_manufacturers';
+		BULK INSERT bronze.erp_manufacturers
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\manufacturers.csv'
 		WITH
 			(
 			FIRSTROW = 2,
-			FORMAT = 'CSV',
+			-- FORMAT = 'CSV',
+			-- DATAFILETYPE = 'char',
 			FIELDQUOTE ='"',
+			FIELDTERMINATOR = ',',
+			ROWTERMINATOR = '\n',
 			TABLOCK
 			);
 
 		PRINT'';
-		-- PRINT'Truncate Table bronze.erp_product';
-		TRUNCATE TABLE bronze.erp_product;
-		-- PRINT'Inserting Data Into bronze.erp_product';
-		BULK INSERT bronze.erp_product
-		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\product.csv'
+		PRINT'Truncate Table bronze.erp_products';
+		TRUNCATE TABLE bronze.erp_products;
+		PRINT'Inserting Data Into bronze.erp_products';
+		BULK INSERT bronze.erp_products
+		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\products.csv'
 		WITH
 			(
 			FIRSTROW = 3,
@@ -146,7 +149,7 @@ BEGIN
 		PRINT'';
 		PRINT'Truncate Table bronze.erp_sales';
 		TRUNCATE TABLE bronze.erp_sales;
-		PRINT'Inserting Data Into bronze.erp_sales';
+		-- PRINT'Inserting Data Into bronze.erp_sales';
 		BULK INSERT bronze.erp_sales
 		FROM 'I:\Data Power Project Data Analysis maketing\sql server datawarehouse project\datasets\erp\sales.csv'
 		WITH
@@ -172,8 +175,3 @@ END
 
  
  
-
-
-
-
-
