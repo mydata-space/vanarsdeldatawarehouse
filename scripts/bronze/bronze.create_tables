@@ -1,10 +1,10 @@
 /*
 ========================================================
-Bronze Layer Tables
+Bronze Layer Create Tables
 ========================================================
 Script Purpose:
-	This script create table for bronze layer. It checks
-	if the table already exist then create a new table
+	This script create tables for bronze layer. It checks
+	if the table already exist then create a new tables
 	in the DataBase 'vanarsdelwarehouse'.
 
 ========================================================
@@ -106,7 +106,7 @@ CREATE TABLE bronze.erp_manufacturers
 	(
 	ManufacturerID INT,
 	Manufacturer NVARCHAR(50),
-	Logo NVARCHAR(500) 
+	Logo NVARCHAR(500)
 	);
 
 IF OBJECT_ID('bronze.erp_products','U') IS NOT NULL
