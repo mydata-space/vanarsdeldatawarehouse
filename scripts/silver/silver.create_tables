@@ -120,17 +120,18 @@ CREATE TABLE silver.erp_manufacturers
 	dwt DATETIME 
 	);
 
-IF OBJECT_ID('silver.erp_products','U') IS NOT NULL
-	DROP TABLE silver.erp_products;
-CREATE TABLE silver.erp_products
-	(
-	ProductID INT,
-	Product NVARCHAR(50),
-	Category NVARCHAR(50),
-	ManufacturerID INT,
-	Price NVARCHAR(50),
-	dwt DATETIME 
-	);
+IF OBJECT_ID('silver.erp_products ','U') IS NOT NULL
+    DROP TABLE silver.erp_products;
+CREATE TABLE silver.erp_products 
+    (
+    ProductID INT,
+    Product_name NVARCHAR(50),
+    Subcategory NVARCHAR(50),
+    Category NVARCHAR(50), 
+    ManufacturerID INT,
+    Currency NVARCHAR(5),
+    Unit_Price DECIMAL(10,2)
+    );
 
 IF OBJECT_ID('silver.erp_sales','U') IS NOT NULL
 	DROP TABLE silver.erp_sales;
