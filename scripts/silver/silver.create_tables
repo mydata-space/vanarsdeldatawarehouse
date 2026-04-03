@@ -26,7 +26,7 @@ CREATE TABLE silver.crm_australia
 	Units INT,
 	Revenue DECIMAL(12,2),
 	Country NVARCHAR(50),
-	dwt DATETIME 
+	Dwt DATETIME
 	);
 
 IF OBJECT_ID('silver.crm_canada','U') IS NOT NULL
@@ -39,7 +39,7 @@ CREATE TABLE silver.crm_canada
 	Units INT,
 	Revenue DECIMAL(12,2),
 	Country NVARCHAR(50),
-	dwt DATETIME 
+	Dwt DATETIME
 	);
 
 IF OBJECT_ID('silver.crm_germany','U') IS NOT NULL
@@ -52,7 +52,7 @@ CREATE TABLE silver.crm_germany
 	Units INT,
 	Revenue DECIMAL(12,2),
 	Country NVARCHAR(50),
-	dwt DATETIME 
+	Dwt DATETIME
 	);
 
 IF OBJECT_ID('silver.crm_japan','U') IS NOT NULL
@@ -65,7 +65,7 @@ CREATE TABLE silver.crm_japan
 	Units INT,
 	Revenue DECIMAL(12,2),
 	Country NVARCHAR(50),
-	dwt DATETIME 
+	Dwt DATETIME
 	);
 
 IF OBJECT_ID('silver.crm_mexico','U') IS NOT NULL
@@ -78,7 +78,7 @@ CREATE TABLE silver.crm_mexico
 	Units INT,
 	Revenue DECIMAL(12,2),
 	Country NVARCHAR(50),
-	dwt DATETIME 
+	Dwt DATETIME 
 	);
 
 IF OBJECT_ID('silver.crm_nigeria','U') IS NOT NULL
@@ -91,7 +91,7 @@ CREATE TABLE silver.crm_nigeria
 	Units INT,
 	Revenue DECIMAL(12,2),
 	Country NVARCHAR(50),
-	dwt DATETIME 
+	Dwt DATETIME
 	);
 
 -- -------------------------
@@ -107,7 +107,7 @@ CREATE TABLE silver.erp_geo
 	Region NVARCHAR(50),
 	District NVARCHAR(50),
 	Country NVARCHAR(50),
-	dwt DATETIME 
+	Dwt DATETIME
 	);
 
 IF OBJECT_ID('silver.erp_manufacturers','U') IS NOT NULL
@@ -117,7 +117,7 @@ CREATE TABLE silver.erp_manufacturers
 	ManufacturerID INT,
 	Manufacturer NVARCHAR(50),
 	Logo NVARCHAR(500),
-	dwt DATETIME 
+	Dwt DATETIME
 	);
 
 IF OBJECT_ID('silver.erp_products ','U') IS NOT NULL
@@ -130,7 +130,8 @@ CREATE TABLE silver.erp_products
     Category NVARCHAR(50), 
     ManufacturerID INT,
     Currency NVARCHAR(5),
-    Unit_Price DECIMAL(10,2)
+    Unit_Price DECIMAL(10,2),
+	Dwt DATETIME 
     );
 
 IF OBJECT_ID('silver.erp_sales','U') IS NOT NULL
@@ -142,7 +143,7 @@ CREATE TABLE silver.erp_sales
 	Zip INT,
 	Units INT,
 	Revenue DECIMAL(12,2),
-	dwt DATETIME 
+	Dwt DATETIME
 	);
 
 
