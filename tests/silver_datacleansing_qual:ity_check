@@ -1,0 +1,1099 @@
+/*
+=============================================================================
+Test : Quality Check
+=============================================================================
+Script Purpose:
+	This script performs various quality checks for data consistency, accuracy,
+	and standardization across the 'silver' schemas. It includes checks for:
+	- Null or duplicate primary keys.
+	- Unwanted spaces in string fields.
+	- Data standardization and consistency.
+	- Invalid date ranges and orders.
+	- Data consistency between related fields.
+
+Usage Notes:
+	- Run these checks after data loading Silver Layer.
+	- Investigate and resolve any discrepancies found during the checks.
+=============================================================================
+*/
+
+-- ---------------------------------------------
+-- CRM table australia
+-- ---------------------------------------------
+
+SELECT * FROM silver.crm_australia
+WHERE Revenue  < 100; 
+
+TRUNCATE TABLE silver.crm_australia;
+INSERT INTO silver.crm_australia
+    (
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    dwt
+    )
+SELECT 
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    GETDATE()
+FROM  bronze.crm_australia; 
+
+-- Data Quality Check
+
+-- Duplicate Check
+-- Expected No duplicate
+WITH duplicate_check AS(
+SELECT 
+    *,
+    ROW_NUMBER() OVER(PARTITION BY Date, ProductID, Zip ORDER BY Zip) AS dup_flag
+FROM  bronze.crm_australia)  
+SELECT * FROM duplicate_check
+WHERE dup_flag = 2;
+/*Based on the business rules we applied, there is no enough eveidence to flag rows 
+of dup_flag column that have number greater or equal to 2. 
+Cross check revealed that people who bought the same and have same Zip could not be same 
+*/
+
+-- Checking Missing value for ProductID
+-- Expected result : No missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(ProductID) AS count_productid,
+    COUNT(*) - COUNT(ProductID)
+FROM  bronze.crm_australia; 
+
+-- Checking Null value for ProductID
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_australia 
+WHERE  ProductID IS NULL OR ProductID = ''; 
+
+-- Checking Null value for Date
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_australia 
+WHERE Date IS NULL ; 
+
+-- Checking Date Scope
+SELECT 
+    MIN(Date) AS earliest_date,
+    MAX(Date) AS latest_date,
+    GETDATE() AS cureent_date
+FROM  bronze.crm_australia 
+
+-- Checking Inconsistency Date
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_australia 
+WHERE Date > GETDATE() ;
+
+-- Checking Null value for Zip
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_australia 
+WHERE Zip  IS NULL OR Zip = ''; 
+
+-- Checking Null value for Units
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_australia 
+WHERE Units  IS NULL OR Zip = ''; 
+
+-- Checking quantity distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Units) AS count_units
+FROM  bronze.crm_australia; 
+
+-- Checking Inconsistency for Units 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_australia 
+WHERE Units < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Units) highest_quantity_sold,
+    MAX(Units) lowest_quantity_sold
+FROM  bronze.crm_australia 
+ 
+-- Checking Revenue distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Revenue) AS count_Revenue
+FROM  bronze.crm_australia; 
+
+-- Checking Inconsistency for Revenue 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_australia 
+WHERE Revenue < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Revenue) highest_quantity_sold,
+    MAX(Revenue) lowest_quantity_sold
+FROM  bronze.crm_australia 
+
+-- Checking Inconsistency for Country 
+-- Expected : NO 
+SELECT 
+    DISTINCT Country,
+    ISNULL(Country, 'N/A') 
+FROM  bronze.crm_australia 
+
+SELECT *
+FROM  bronze.crm_australia 
+WHERE TRIM(Country)  <> Country or Country IS NULL OR Country = '' 
+
+-- ---------------------------------------------
+-- CRM table canada
+-- ---------------------------------------------
+-- Quality check and cleaning process
+SELECT * FROM silver.crm_canada
+WHERE Revenue  < 100; 
+
+TRUNCATE TABLE silver.crm_canada;
+INSERT INTO silver.crm_canada
+    (
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    dwt
+    )
+SELECT 
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    GETDATE()
+FROM  bronze.crm_canada; 
+
+-- Data Quality Check
+
+-- Duplicate Check
+-- Expected No duplicate
+WITH duplicate_check AS(
+SELECT 
+    *,
+    ROW_NUMBER() OVER(PARTITION BY Date, ProductID, Zip ORDER BY Zip) AS dup_flag
+FROM  bronze.crm_canada)  
+SELECT * FROM duplicate_check
+WHERE dup_flag = 2;
+/*Based on the business rules we applied, there is no enough eveidence to flag rows 
+of dup_flag column that have number greater or equal to 2. 
+Cross check revealed that people who bought the same and have same Zip could not be same 
+*/
+
+-- Checking Missing value for ProductID
+-- Expected result : No missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(ProductID) AS count_productid,
+    COUNT(*) - COUNT(ProductID)
+FROM  bronze.crm_canada; 
+
+-- Checking Null value for ProductID
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_canada 
+WHERE  ProductID IS NULL OR ProductID = ''; 
+
+-- Checking Null value for Date
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_canada 
+WHERE Date IS NULL ; 
+
+-- Checking Date Scope
+SELECT 
+    MIN(Date) AS earliest_date,
+    MAX(Date) AS latest_date,
+    GETDATE() AS cureent_date
+FROM  bronze.crm_canada 
+
+-- Checking Inconsistency Date
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_canada 
+WHERE Date > GETDATE() ;
+
+-- Checking Null value for Zip
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_canada 
+WHERE Zip  IS NULL OR Zip = ''; 
+
+-- Checking Null value for Units
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_canada 
+WHERE Units  IS NULL OR Zip = ''; 
+
+-- Checking quantity distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Units) AS count_units
+FROM  bronze.crm_canada; 
+
+-- Checking Inconsistency for Units 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_canada 
+WHERE Units < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Units) highest_quantity_sold,
+    MAX(Units) lowest_quantity_sold
+FROM  bronze.crm_canada 
+ 
+-- Checking Revenue distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Revenue) AS count_Revenue
+FROM  bronze.crm_canada; 
+
+-- Checking Inconsistency for Revenue 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_canada 
+WHERE Revenue < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Revenue) highest_quantity_sold,
+    MAX(Revenue) lowest_quantity_sold
+FROM  bronze.crm_canada 
+
+-- Checking Inconsistency for Country 
+-- Expected : NO 
+SELECT 
+    DISTINCT Country,
+    ISNULL(Country, 'N/A') 
+FROM  bronze.crm_canada 
+
+--
+SELECT *
+FROM  bronze.crm_canada 
+WHERE TRIM(Country)  <> Country or Country IS NULL OR Country = '' 
+
+-- ---------------------------------------------
+-- CRM table germany
+-- ---------------------------------------------
+-- Quality check and cleaning process
+SELECT * FROM silver.crm_germany
+WHERE Revenue  < 100; 
+
+TRUNCATE TABLE silver.crm_germany;
+INSERT INTO silver.crm_germany
+    (
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    dwt
+    )
+SELECT 
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    GETDATE()
+FROM  bronze.crm_germany; 
+
+-- Data Quality Check
+
+-- Duplicate Check
+-- Expected No duplicate
+WITH duplicate_check AS(
+SELECT 
+    *,
+    ROW_NUMBER() OVER(PARTITION BY Date, ProductID, Zip ORDER BY Zip) AS dup_flag
+FROM  bronze.crm_germany)  
+SELECT * FROM duplicate_check
+WHERE dup_flag = 2;
+/*Based on the business rules we applied, there is no enough eveidence to flag rows 
+of dup_flag column that have number greater or equal to 2. 
+Cross check revealed that people who bought the same and have same Zip could not be same 
+*/
+
+-- Checking Missing value for ProductID
+-- Expected result : No missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(ProductID) AS count_productid,
+    COUNT(*) - COUNT(ProductID)
+FROM  bronze.crm_germany; 
+
+-- Checking Null value for ProductID
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_germany 
+WHERE  ProductID IS NULL OR ProductID = ''; 
+
+-- Checking Null value for Date
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_germany 
+WHERE Date IS NULL ; 
+
+-- Checking Date Scope
+SELECT 
+    MIN(Date) AS earliest_date,
+    MAX(Date) AS latest_date,
+    GETDATE() AS cureent_date
+FROM  bronze.crm_germany 
+
+-- Checking Inconsistency Date
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_germany 
+WHERE Date > GETDATE() ;
+
+-- Checking Null value for Zip
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_germany 
+WHERE Zip  IS NULL OR Zip = ''; 
+
+-- Checking Null value for Units
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_germany 
+WHERE Units  IS NULL OR Zip = ''; 
+
+-- Checking quantity distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Units) AS count_units
+FROM  bronze.crm_germany; 
+
+-- Checking Inconsistency for Units 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_germany 
+WHERE Units < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Units) highest_quantity_sold,
+    MAX(Units) lowest_quantity_sold
+FROM  bronze.crm_germany 
+ 
+-- Checking Revenue distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Revenue) AS count_Revenue
+FROM  bronze.crm_germany; 
+
+-- Checking Inconsistency for Revenue 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_germany 
+WHERE Revenue < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Revenue) highest_quantity_sold,
+    MAX(Revenue) lowest_quantity_sold
+FROM  bronze.crm_germany 
+
+-- Checking Inconsistency for Country 
+-- Expected : NO 
+SELECT 
+    DISTINCT Country,
+    ISNULL(Country, 'N/A') 
+FROM  bronze.crm_germany 
+
+--
+SELECT *
+FROM  bronze.crm_germany 
+WHERE TRIM(Country)  <> Country or Country IS NULL OR Country = '' 
+
+
+-- ---------------------------------------------
+-- CRM table japan
+-- ---------------------------------------------
+-- Quality check and cleaning process
+SELECT * FROM silver.crm_japan
+WHERE Revenue  < 100; 
+
+TRUNCATE TABLE silver.crm_japan;
+INSERT INTO silver.crm_japan
+    (
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    dwt
+    )
+SELECT 
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    GETDATE()
+FROM  bronze.crm_japan; 
+
+-- Data Quality Check
+
+-- Duplicate Check
+-- Expected No duplicate
+WITH duplicate_check AS(
+SELECT 
+    *,
+    ROW_NUMBER() OVER(PARTITION BY Date, ProductID, Zip ORDER BY Zip) AS dup_flag
+FROM  bronze.crm_japan)  
+SELECT * FROM duplicate_check
+WHERE dup_flag = 2;
+/*Based on the business rules we applied, there is no enough eveidence to flag rows 
+of dup_flag column that have number greater or equal to 2. 
+Cross check revealed that people who bought the same and have same Zip could not be same 
+*/
+
+-- Checking Missing value for ProductID
+-- Expected result : No missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(ProductID) AS count_productid,
+    COUNT(*) - COUNT(ProductID)
+FROM  bronze.crm_japan; 
+
+-- Checking Null value for ProductID
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_japan 
+WHERE  ProductID IS NULL OR ProductID = ''; 
+
+-- Checking Null value for Date
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_japan 
+WHERE Date IS NULL ; 
+
+-- Checking Date Scope
+SELECT 
+    MIN(Date) AS earliest_date,
+    MAX(Date) AS latest_date,
+    GETDATE() AS cureent_date
+FROM  bronze.crm_japan 
+
+-- Checking Inconsistency Date
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_japan 
+WHERE Date > GETDATE() ;
+
+-- Checking Null value for Zip
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_japan 
+WHERE Zip  IS NULL OR Zip = ''; 
+
+-- Checking Null value for Units
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_japan 
+WHERE Units  IS NULL OR Zip = ''; 
+
+-- Checking quantity distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Units) AS count_units
+FROM  bronze.crm_japan; 
+
+-- Checking Inconsistency for Units 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_japan 
+WHERE Units < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Units) highest_quantity_sold,
+    MAX(Units) lowest_quantity_sold
+FROM  bronze.crm_japan 
+ 
+-- Checking Revenue distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Revenue) AS count_Revenue
+FROM  bronze.crm_japan; 
+
+-- Checking Inconsistency for Revenue 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_japan 
+WHERE Revenue < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Revenue) highest_quantity_sold,
+    MAX(Revenue) lowest_quantity_sold
+FROM  bronze.crm_japan 
+
+-- Checking Inconsistency for Country 
+-- Expected : NO 
+SELECT 
+    DISTINCT Country,
+    ISNULL(Country, 'N/A') 
+FROM  bronze.crm_japan 
+
+--
+SELECT *
+FROM  bronze.crm_japan 
+WHERE TRIM(Country)  <> Country or Country IS NULL OR Country = '' 
+
+
+-- ---------------------------------------------
+-- CRM table mexico
+-- ---------------------------------------------
+-- Quality check and cleaning process
+SELECT * FROM silver.crm_mexico
+WHERE Revenue  < 100; 
+
+TRUNCATE TABLE silver.crm_mexico;
+INSERT INTO silver.crm_mexico
+    (
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    dwt
+    )
+SELECT 
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    GETDATE()
+FROM  bronze.crm_mexico; 
+
+-- Data Quality Check
+
+-- Duplicate Check
+-- Expected No duplicate
+WITH duplicate_check AS(
+SELECT 
+    *,
+    ROW_NUMBER() OVER(PARTITION BY Date, ProductID, Zip ORDER BY Zip) AS dup_flag
+FROM  bronze.crm_mexico)  
+SELECT * FROM duplicate_check
+WHERE dup_flag = 2;
+/*Based on the business rules we applied, there is no enough eveidence to flag rows 
+of dup_flag column that have number greater or equal to 2. 
+Cross check revealed that people who bought the same and have same Zip could not be same 
+*/
+
+-- Checking Missing value for ProductID
+-- Expected result : No missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(ProductID) AS count_productid,
+    COUNT(*) - COUNT(ProductID)
+FROM  bronze.crm_mexico; 
+
+-- Checking Null value for ProductID
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_mexico 
+WHERE  ProductID IS NULL OR ProductID = ''; 
+
+-- Checking Null value for Date
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_mexico 
+WHERE Date IS NULL ; 
+
+-- Checking Date Scope
+SELECT 
+    MIN(Date) AS earliest_date,
+    MAX(Date) AS latest_date,
+    GETDATE() AS cureent_date
+FROM  bronze.crm_mexico 
+
+-- Checking Inconsistency Date
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_mexico 
+WHERE Date > GETDATE() ;
+
+-- Checking Null value for Zip
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_mexico 
+WHERE Zip  IS NULL OR Zip = ''; 
+
+-- Checking Null value for Units
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_mexico 
+WHERE Units  IS NULL OR Zip = ''; 
+
+-- Checking quantity distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Units) AS count_units
+FROM  bronze.crm_mexico; 
+
+-- Checking Inconsistency for Units 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_mexico 
+WHERE Units < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Units) highest_quantity_sold,
+    MAX(Units) lowest_quantity_sold
+FROM  bronze.crm_mexico 
+ 
+-- Checking Revenue distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Revenue) AS count_Revenue
+FROM  bronze.crm_mexico; 
+
+-- Checking Inconsistency for Revenue 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_mexico 
+WHERE Revenue < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Revenue) highest_quantity_sold,
+    MAX(Revenue) lowest_quantity_sold
+FROM  bronze.crm_mexico 
+
+-- Checking Inconsistency for Country 
+-- Expected : NO 
+SELECT 
+    DISTINCT Country,
+    ISNULL(Country, 'N/A') 
+FROM  bronze.crm_mexico 
+
+--
+SELECT *
+FROM  bronze.crm_mexico 
+WHERE TRIM(Country)  <> Country or Country IS NULL OR Country = '' 
+
+
+-- ---------------------------------------------
+-- CRM table nigeria
+-- ---------------------------------------------
+-- Quality check and cleaning process
+SELECT * FROM silver.crm_nigeria
+WHERE Revenue  < 100; 
+
+TRUNCATE TABLE silver.crm_nigeria;
+INSERT INTO silver.crm_nigeria
+    (
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    dwt
+    )
+SELECT 
+    ProductID, 
+    Date ,
+    Zip ,
+    Units ,
+    Revenue ,
+    Country,
+    GETDATE()
+FROM  bronze.crm_nigeria; 
+
+-- Data Quality Check
+
+-- Duplicate Check
+-- Expected No duplicate
+WITH duplicate_check AS(
+SELECT 
+    *,
+    ROW_NUMBER() OVER(PARTITION BY Date, ProductID, Zip ORDER BY Zip) AS dup_flag
+FROM  bronze.crm_nigeria)  
+SELECT * FROM duplicate_check
+WHERE dup_flag = 2;
+/*Based on the business rules we applied, there is no enough eveidence to flag rows 
+of dup_flag column that have number greater or equal to 2. 
+Cross check revealed that people who bought the same and have same Zip could not be same 
+*/
+
+-- Checking Missing value for ProductID
+-- Expected result : No missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(ProductID) AS count_productid,
+    COUNT(*) - COUNT(ProductID)
+FROM  bronze.crm_nigeria; 
+
+-- Checking Null value for ProductID
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_nigeria 
+WHERE  ProductID IS NULL OR ProductID = ''; 
+
+-- Checking Null value for Date
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_nigeria 
+WHERE Date IS NULL ; 
+
+-- Checking Date Scope
+SELECT 
+    MIN(Date) AS earliest_date,
+    MAX(Date) AS latest_date,
+    GETDATE() AS cureent_date
+FROM  bronze.crm_nigeria 
+
+-- Checking Inconsistency Date
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_nigeria 
+WHERE Date > GETDATE() ;
+
+-- Checking Null value for Zip
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_nigeria 
+WHERE Zip  IS NULL OR Zip = ''; 
+
+-- Checking Null value for Units
+-- Expected rsult : No null
+SELECT *
+FROM  bronze.crm_nigeria 
+WHERE Units  IS NULL OR Zip = ''; 
+
+-- Checking quantity distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Units) AS count_units
+FROM  bronze.crm_nigeria; 
+
+-- Checking Inconsistency for Units 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_nigeria 
+WHERE Units < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Units) highest_quantity_sold,
+    MAX(Units) lowest_quantity_sold
+FROM  bronze.crm_nigeria 
+ 
+-- Checking Revenue distribution and missing values
+-- Expected : Normal distribution and missing value
+SELECT 
+    COUNT(*) AS total_record, 
+    COUNT(Revenue) AS count_Revenue
+FROM  bronze.crm_nigeria; 
+
+-- Checking Inconsistency for Revenue 
+-- Expected : NO 
+SELECT *
+FROM  bronze.crm_nigeria 
+WHERE Revenue < 0
+
+-- Checking min and max quantity sold 
+SELECT 
+    MIN(Revenue) highest_quantity_sold,
+    MAX(Revenue) lowest_quantity_sold
+FROM  bronze.crm_nigeria 
+
+-- Checking Inconsistency for Country 
+-- Expected : NO 
+SELECT 
+    DISTINCT Country,
+    ISNULL(Country, 'N/A') 
+FROM  bronze.crm_nigeria 
+
+--
+SELECT *
+FROM  bronze.crm_nigeria 
+WHERE TRIM(Country)  <> Country or Country IS NULL OR Country = '' 
+
+-- ---------------------------------------------
+-- ERP table geo
+-- ---------------------------------------------
+-- Expected result : no
+SELECT  *
+FROM(
+SELECT
+	  Zip 
+	 , City 
+	 , State 
+	 , Region 
+	 , District 
+	 , Country
+	 ,COUNT(*) dup_flag
+FROM  bronze.erp_geo
+GROUP BY 
+	  Zip 
+	 , City 
+	 , State  
+	 , Region 
+	 , District 
+	 , Country) flag_duplicates
+WHERE dup_flag >1
+
+-- Checking null for Zip    
+-- Expected : no null 
+SELECT * FROM bronze.erp_geo
+WHERE Zip IS NULL OR Zip = ''
+
+-- Checking null for City    
+-- Expected : no null 
+SELECT * FROM bronze.erp_geo
+WHERE City IS NULL AND Country = 'Mexico'
+
+SELECT 
+	DISTINCT State, 
+	City,
+	Region
+FROM bronze.erp_geo
+WHERE Country = 'Germany' -- 'Mexico' 
+
+-- Checking Inconsistency for Country 
+-- Expected : NO 
+SELECT 
+	State,
+	CASE WHEN State IS NULL then Country ELSE State END AS fill_state  
+FROM bronze.erp_geo
+WHERE State IS NULL or State = ''
+
+/*
+Based on the business rule, form the dataset, the Country and the State are the appropriate  
+columns to perform further analysis and reporting. 
+*/
+SELECT *
+FROM  bronze.erp_geo
+WHERE TRIM(Country)  <> Country or Country IS NULL OR Country = '' 
+
+SELECT 
+	City, Region, District
+FROM  bronze.erp_geo
+WHERE Country =  'Mexico'-- 'USA' --  'Germany' --
+ 
+SELECT 
+	Distinct City,
+	LEN(City)
+FROM  bronze.erp_geo
+WHERE Country = 'USA'
+
+-- ---------------------------------------------
+-- ERP table manufacturer
+-- ---------------------------------------------
+SELECT 
+     ManufacturerID
+    ,Manufacturer
+    ,Logo
+FROM bronze.erp_manufacturers
+WHERE ManufacturerID IS NOT NULL 
+
+-- ---------------------------------------------
+-- ERP table products
+-- ---------------------------------------------
+-- Duplicates check
+-- Expected result : no duplicates 
+SELECT * 
+FROM(
+SELECT 
+        ProductID 
+      , COUNT(*) total_record
+FROM  bronze.erp_products 
+GROUP BY 
+        ProductID) flag_duplicates
+WHERE total_record > 1  
+
+-- Standardize column product
+SELECT 
+    MAX(number),
+    MIN(number)
+FROM(
+SELECT 
+    Distinct Product,
+    LEN(Product) AS number
+FROM  bronze.erp_products) TTT
+
+-- Spilt column product name and subcategory
+SELECT
+Product,
+CASE 
+    WHEN Product LIKE '%Leo%' THEN SUBSTRING(Product,1,9)
+    WHEN Product LIKE  '%Fama%' THEN SUBSTRING(Product,1,10) 
+    WHEN Product LIKE '%Pomum%' THEN SUBSTRING(Product,1,11)
+    WHEN Product LIKE  '%Palma%' OR Product LIKE  '%Pirum%' OR Product LIKE '%Abbas%' THEN SUBSTRING(Product,1,11) 
+    WHEN Product LIKE '%Currus%'OR Product LIKE  '%Natura%' OR Product LIKE '%Aliqui%' 
+        OR Product LIKE  '%Quibus%' OR Product LIKE  '%Salvus%' THEN SUBSTRING(Product,1,12) 
+    WHEN Product LIKE '%Maximus%' OR Product LIKE  '%Maximus%' THEN SUBSTRING(Product,1,13) 
+END AS product_name,
+CASE 
+    WHEN Product LIKE '%Leo%' THEN SUBSTRING(Product,11,LEN(Product))
+    WHEN Product LIKE '%Fama%' THEN SUBSTRING(Product,12,LEN(Product))
+    WHEN Product LIKE '%Pomum%' OR Product LIKE '%Abbas%' OR Product LIKE '%Palma%' 
+        OR Product LIKE '%Pirum%' THEN SUBSTRING(Product,13,LEN(Product))
+    WHEN Product LIKE '%Aliqui%' OR Product LIKE '%Currus%' OR Product LIKE '%Natura%' 
+        OR Product LIKE '%Quibus%' OR Product LIKE '%Salvus%' THEN SUBSTRING(Product,14,LEN(Product))
+    WHEN Product LIKE '%Maximus%' OR Product LIKE '%Maximus%' THEN SUBSTRING(Product,15,LEN(Product))
+END AS Subcategory
+FROM bronze.erp_products 
+ 
+-- Standardize column price 
+SELECT 
+Price,
+SUBSTRING(Price,1,3) AS Currency,
+SUBSTRING(Price,5,LEN(Price)) AS Unit_Price
+FROM bronze.erp_products 
+
+
+-- ---------------------------------------------
+-- CRM table products
+-- ---------------------------------------------
+-- Duplicates check
+-- Expected result : no duplicates 
+SELECT * 
+FROM(
+SELECT 
+        ProductID 
+      , COUNT(*) total_record
+FROM  bronze.erp_products 
+GROUP BY 
+        ProductID) flag_duplicates
+WHERE total_record > 1  
+
+-- Standardize column product
+SELECT 
+    MAX(number),
+    MIN(number)
+FROM(
+SELECT 
+    Distinct Product,
+    LEN(Product) AS number
+FROM  bronze.erp_products) TTT
+
+-- Spilt column product name and subcategory
+SELECT
+Product,
+CASE 
+    WHEN Product LIKE '%Leo%' THEN SUBSTRING(Product,1,9)
+    WHEN Product LIKE  '%Fama%' THEN SUBSTRING(Product,1,10) 
+    WHEN Product LIKE '%Pomum%' THEN SUBSTRING(Product,1,11)
+    WHEN Product LIKE  '%Palma%' OR Product LIKE  '%Pirum%' OR Product LIKE '%Abbas%' THEN SUBSTRING(Product,1,11) 
+    WHEN Product LIKE '%Currus%'OR Product LIKE  '%Natura%' OR Product LIKE '%Aliqui%' 
+        OR Product LIKE  '%Quibus%' OR Product LIKE  '%Salvus%' THEN SUBSTRING(Product,1,12) 
+    WHEN Product LIKE '%Maximus%' OR Product LIKE  '%Maximus%' THEN SUBSTRING(Product,1,13) 
+END AS product_name,
+CASE 
+    WHEN Product LIKE '%Leo%' THEN SUBSTRING(Product,11,LEN(Product))
+    WHEN Product LIKE '%Fama%' THEN SUBSTRING(Product,12,LEN(Product))
+    WHEN Product LIKE '%Pomum%' OR Product LIKE '%Abbas%' OR Product LIKE '%Palma%' 
+        OR Product LIKE '%Pirum%' THEN SUBSTRING(Product,13,LEN(Product))
+    WHEN Product LIKE '%Aliqui%' OR Product LIKE '%Currus%' OR Product LIKE '%Natura%' 
+        OR Product LIKE '%Quibus%' OR Product LIKE '%Salvus%' THEN SUBSTRING(Product,14,LEN(Product))
+    WHEN Product LIKE '%Maximus%' OR Product LIKE '%Maximus%' THEN SUBSTRING(Product,15,LEN(Product))
+END AS Subcategory
+FROM bronze.erp_products 
+ 
+-- Standardize column price 
+SELECT 
+Price,
+SUBSTRING(Price,1,3) AS Currency,
+SUBSTRING(Price,5,LEN(Price)) AS Unit_Price
+FROM bronze.erp_products 
+
+-- ---------------------------------------------
+-- CRM table sales
+-- ---------------------------------------------
+-- Null and missing value 
+SELECT 
+*
+FROM  bronze.erp_sales
+WHERE ProductID  IS NULL OR ProductID = ''
+
+-- Null and missing value 
+SELECT 
+*
+FROM  bronze.erp_sales
+WHERE Zip   IS NULL OR Zip  = ''
+
+-- Null and missing value 
+SELECT 
+*
+FROM  bronze.erp_sales
+WHERE Units < 0 OR Units IS NULL
+
+SELECT 
+MIN(Units), MAX(Units)
+FROM  bronze.erp_sales
+
+-- Null and missing value 
+SELECT 
+*
+FROM  bronze.erp_sales
+WHERE Revenue < 0 OR Revenue IS NULL
+
+SELECT 
+MIN(Revenue ), MAX(Revenue)
+FROM  bronze.erp_sales
+
+-- Null and missing value 
+SELECT 
+*
+FROM  bronze.erp_sales
+WHERE Date IS NULL 
+
+SELECT 
+MIN(Date), MAX(Date)
+FROM  bronze.erp_sales
+
+SELECT 
+*
+FROM  bronze.erp_sales
+WHERE Date > GETDATE()  
+
+
+
+
+
+
