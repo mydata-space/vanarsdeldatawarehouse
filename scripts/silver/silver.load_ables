@@ -1,0 +1,331 @@
+/*
+==================================================================
+Store Procedure : Clean and Load Data Into Silver Layer 
+==================================================================
+Script Purpose:
+	This SP script cleans and loads data into silver layer tables 
+	using bulk insert.
+	
+	the script check the time and controls possible errors  
+==================================================================
+*/
+
+CREATE OR ALTER PROCEDURE silver.load_tables AS
+BEGIN
+	DECLARE @batchload_starttime DATETIME, @batchload_endtime DATETIME
+	BEGIN TRY 
+		PRINT'=================================================';
+		PRINT'Loading Data Into Silver Layers Tables';
+		PRINT'=================================================';
+		PRINT'Batch Load Start Time';
+        SET @batchload_starttime = GETDATE()
+
+		PRINT'';
+        PRINT'----------------------------------------';
+		PRINT'CRM';
+		PRINT'----------------------------------------';
+		PRINT'>>';
+        PRINT'Truncate Table silver.crm_australia';
+        TRUNCATE TABLE silver.crm_australia;
+        DECLARE @crm_australiaload_starttime DATETIME, @crm_australiaload_endtime DATETIME
+        SET @crm_australiaload_starttime = GETDATE()
+        PRINT'Inserting Data into silver.crm_australia';
+        INSERT INTO silver.crm_australia
+            (
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            Dwt
+            )
+        SELECT 
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            GETDATE()
+        FROM bronze.crm_australia; 
+        SET @crm_australiaload_endtime = GETDATE()
+        PRINT'Load Duration crm_australiaload ' + CAST(DATEDIFF(SECOND,@crm_australiaload_starttime, @crm_australiaload_endtime)AS NVARCHAR) + ' seconds';
+
+        PRINT'Truncate Table silver.crm_canada';
+        DECLARE @crm_canadaload_starttime DATETIME, @crm_canadaload_endtime DATETIME
+        SET @crm_canadaload_starttime = GETDATE()
+        TRUNCATE TABLE silver.crm_canada;
+        PRINT' Inserting Data Into silver.crm_canada';
+        INSERT INTO silver.crm_canada
+            (
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            Dwt
+            )
+        SELECT 
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            GETDATE()
+        FROM bronze.crm_canada; 
+        SET @crm_canadaload_endtime = GETDATE()
+        PRINT'Load Duration crm_canadaload ' + CAST(DATEDIFF(SECOND,@crm_canadaload_starttime, @crm_canadaload_endtime)AS NVARCHAR) + ' seconds';
+        
+        PRINT'Truncate Table silver.crm_germany';
+        TRUNCATE TABLE silver.crm_germany;
+        DECLARE @crm_germanyload_starttime DATETIME, @crm_germanyload_endtime DATETIME
+        SET @crm_germanyload_starttime = GETDATE()
+        PRINT' Inserting Data Into silver.crm_germany';
+        INSERT INTO silver.crm_germany
+            (
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            Dwt
+            )
+        SELECT 
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            GETDATE()
+        FROM  bronze.crm_germany; 
+        SET @crm_germanyload_endtime = GETDATE()
+        PRINT'Load Duration crm_germanyload ' + CAST(DATEDIFF(SECOND,@crm_germanyload_starttime, @crm_germanyload_endtime)AS NVARCHAR) + ' seconds';
+        
+        PRINT'Truncate Table silver.crm_japan';
+        TRUNCATE TABLE silver.crm_japan;
+        DECLARE @crm_japanload_starttime DATETIME, @crm_japanload_endtime DATETIME
+        SET @crm_japanload_starttime = GETDATE()
+        PRINT'Inserting Data Into silver.crm_japan';
+        INSERT INTO silver.crm_japan
+            (
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            Dwt
+            )
+        SELECT 
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            GETDATE()
+        FROM  bronze.crm_japan; 
+        SET @crm_japanload_endtime = GETDATE()
+        PRINT'Load Duration crm_japanload ' + CAST(DATEDIFF(SECOND,@crm_japanload_starttime, @crm_japanload_endtime)AS NVARCHAR) + ' seconds';
+        
+        PRINT'Truncate Table silver.crm_mexico';
+        TRUNCATE TABLE silver.crm_mexico;
+        DECLARE @crm_mexicoload_starttime DATETIME, @crm_mexicoload_endtime DATETIME
+        SET @crm_mexicoload_starttime = GETDATE()
+        PRINT'Inserting Data Into silver.crm_mexico';
+        INSERT INTO silver.crm_mexico
+            (
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            Dwt
+            )
+        SELECT 
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            GETDATE()
+        FROM  bronze.crm_mexico; 
+        SET @crm_mexicoload_endtime = GETDATE()
+        PRINT'Load Duration crm_mexicoload ' + CAST(DATEDIFF(SECOND,@crm_mexicoload_starttime, @crm_mexicoload_endtime)AS NVARCHAR) + ' seconds';
+        
+        PRINT'Truncate Table silver.crm_nigeria';
+        TRUNCATE TABLE silver.crm_nigeria;
+        DECLARE @crm_nigeriaload_starttime DATETIME, @crm_nigeriaload_endtime DATETIME
+        SET @crm_nigeriaload_starttime = GETDATE()
+        PRINT'Inserting Data Into silver.crm_nigeria';
+        INSERT INTO silver.crm_nigeria
+            (
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            Dwt
+            )
+        SELECT 
+            ProductID, 
+            Date ,
+            Zip ,
+            Units ,
+            Revenue ,
+            Country,
+            GETDATE()
+        FROM  bronze.crm_nigeria;  
+        SET @crm_nigeriaload_endtime = GETDATE()
+        PRINT'Load Duration crm_nigeriaload ' + CAST(DATEDIFF(SECOND,@crm_nigeriaload_starttime, @crm_nigeriaload_endtime)AS NVARCHAR) + ' seconds';
+        
+		PRINT'';
+        PRINT'----------------------------------------';
+		PRINT'ERP';
+		PRINT'----------------------------------------';
+		PRINT'>>';
+		PRINT'Truncate Table silver.erp_geo';
+        TRUNCATE TABLE silver.erp_geo; 
+        DECLARE @erp_geoload_starttime DATETIME, @erp_geoload_endtime DATETIME
+        SET @erp_geoload_starttime = GETDATE()
+        PRINT'Inserting Data Into silver.erp_geo';
+        INSERT INTO silver.erp_geo
+	        (
+	        Zip,
+	        City,
+	        State,
+	        Region,
+	        District,
+	        Country,
+	        Dwt
+	        )
+        SELECT   
+	         Zip, 
+	         City, 
+	         CASE WHEN State IS NULL then Country ELSE State END AS State,  
+	         Region, 
+	         District, 
+	         TRIM(Country) AS Country,
+	         GETDATE()
+        FROM  bronze.erp_geo
+        SET @erp_geoload_endtime = GETDATE()
+        PRINT'Load Duration erp_geoload ' + CAST(DATEDIFF(SECOND,@erp_geoload_starttime, @erp_geoload_endtime)AS NVARCHAR) + ' seconds';
+        
+        PRINT'Truncate Table silver.erp_manufacturers';
+        TRUNCATE TABLE silver.erp_manufacturers;
+        DECLARE @erp_manufacturersload_starttime DATETIME, @erp_manufacturersload_endtime DATETIME
+        SET @erp_manufacturersload_starttime = GETDATE()
+        PRINT'Inserting Data Into silver.erp_manufacturers';
+        INSERT INTO silver.erp_manufacturers
+            (
+            ManufacturerID,
+            Manufacturer,
+            Logo,
+            Dwt
+            )
+        SELECT 
+            ManufacturerID,
+            Manufacturer,
+            Logo,
+            GETDATE()
+        FROM bronze.erp_manufacturers
+        WHERE ManufacturerID IS NOT NULL 
+        SET @erp_manufacturersload_endtime = GETDATE()
+        PRINT'Load Duration erp_manufacturersload ' + CAST(DATEDIFF(SECOND,@erp_manufacturersload_starttime, @erp_manufacturersload_endtime)AS NVARCHAR) + ' seconds';
+        
+        PRINT'Truncate Table silver.erp_products';
+        TRUNCATE TABLE silver.erp_products;
+        DECLARE @erp_productsload_starttime DATETIME, @erp_productsload_endtime DATETIME
+        SET @erp_productsload_starttime = GETDATE()
+        PRINT'Inserting Data Into silver.erp_products';
+        INSERT INTO silver.erp_products 
+            (
+            ProductID,
+            Product_name,
+            Subcategory,
+            Category, 
+            ManufacturerID,
+            Currency,
+            Unit_Price,
+            Dwt
+            )
+        SELECT 
+            ProductID, 
+            CASE 
+            WHEN Product LIKE '%Leo%' THEN SUBSTRING(Product,1,9)
+            WHEN Product LIKE  '%Fama%' THEN SUBSTRING(Product,1,10) 
+            WHEN Product LIKE '%Pomum%' THEN SUBSTRING(Product,1,11)
+            WHEN Product LIKE  '%Palma%' OR Product LIKE  '%Pirum%' OR Product LIKE '%Abbas%' THEN SUBSTRING(Product,1,11) 
+            WHEN Product LIKE '%Currus%'OR Product LIKE  '%Natura%' OR Product LIKE '%Aliqui%' 
+                OR Product LIKE  '%Quibus%' OR Product LIKE  '%Salvus%' THEN SUBSTRING(Product,1,12) 
+            WHEN Product LIKE '%Maximus%' OR Product LIKE  '%Maximus%' THEN SUBSTRING(Product,1,13) 
+            END AS product_name,
+            CASE 
+            WHEN Product LIKE '%Leo%' THEN SUBSTRING(Product,11,LEN(Product))
+            WHEN Product LIKE '%Fama%' THEN SUBSTRING(Product,12,LEN(Product))
+            WHEN Product LIKE '%Pomum%' OR Product LIKE '%Abbas%' OR Product LIKE '%Palma%' 
+                OR Product LIKE '%Pirum%' THEN SUBSTRING(Product,13,LEN(Product))
+            WHEN Product LIKE '%Aliqui%' OR Product LIKE '%Currus%' OR Product LIKE '%Natura%' 
+                OR Product LIKE '%Quibus%' OR Product LIKE '%Salvus%' THEN SUBSTRING(Product,14,LEN(Product))
+            WHEN Product LIKE '%Maximus%' OR Product LIKE '%Maximus%' THEN SUBSTRING(Product,15,LEN(Product))
+            END AS Subcategory,
+            Category, 
+            ManufacturerID, 
+            SUBSTRING(Price,1,3) AS Currency,
+            SUBSTRING(Price,5,LEN(Price)) AS Unit_Price,
+            GETDATE()
+        FROM bronze.erp_products 
+        SET @erp_productsload_endtime = GETDATE()
+        PRINT'Load Duration erp_productsload ' + CAST(DATEDIFF(SECOND,@erp_productsload_starttime, @erp_productsload_endtime)AS NVARCHAR) + ' seconds';
+        
+        PRINT'Truncate Table silver table silver.erp_sales';
+        TRUNCATE TABLE silver.erp_sales;
+        DECLARE @erp_salesload_starttime DATETIME, @erp_salesload_endtime DATETIME
+        SET @erp_salesload_starttime = GETDATE()
+        PRINT'Inserting Data Into silver.erp_sales';
+        INSERT INTO silver.erp_sales
+            (
+            ProductID ,
+	        Date ,
+	        Zip ,
+	        Units ,
+	        Revenue ,
+	        Dwt  
+            )
+        SELECT ProductID 
+            , Date 
+            , Zip 
+            , Units 
+            , Revenue
+            , GETDATE()
+        FROM  bronze.erp_sales 
+        SET @erp_salesload_endtime = GETDATE()
+        PRINT'Load Duration erp_salesload ' + CAST(DATEDIFF(SECOND,@erp_salesload_starttime, @erp_salesload_endtime)AS NVARCHAR) + ' seconds';
+        
+        PRINT'**************************************';
+        PRINT'Batch Load End Time';
+		SET @batchload_endtime = GETDATE()
+		PRINT'Loading Duration' + CAST(DATEDIFF(SECOND,@batchload_starttime,@batchload_endtime) AS NVARCHAR) + 'seconds';
+	    PRINT'**************************************';
+    END TRY
+	BEGIN CATCH 
+		PRINT'ERROR TYPE' + ERROR_MESSAGE();
+		PRINT'ERROR TYPE' + CAST(ERROR_NUMBER() AS NVARCHAR);
+		PRINT'ERROR TYPE' + CAST(ERROR_STATE() AS NVARCHAR);
+	END CATCH 
+END
+
+
+
+
+
+ 
+ 
