@@ -143,6 +143,7 @@ CREATE TABLE silver.erp_sales
 	Zip INT,
 	Units INT,
 	Revenue DECIMAL(12,2),
+	Country NVARCHAR(50) DEFAULT 'USA',
 	Dwt DATETIME
 	);
 
