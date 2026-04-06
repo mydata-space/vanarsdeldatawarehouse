@@ -132,11 +132,53 @@ FROM country_contribution cc;
 
 
 -- 5. Create a ready to sue report  for BI viz 
-/* In this section you need to collect very important column and aggregate 
-others measure to put in one object. 
+/* This section collect very important column and aggregate 
+others measures to put in one object for viz purposes. 
 */ 
 
+-- Views sales_report
+CREATE VIEW sales_report AS
+SELECT
+	s.product_id, 
+	s.zip,
+	s.country,
+	s.order_date,  
+	s.quantity,
+	p.unit_price,
+	s.quantity * p.unit_price AS sales_amount
+FROM gold.fact_sales s 
+LEFT JOIN gold.dim_products p 
+ON s.product_id = p.product_id
 
+-- Views products_report 
+CREATE VIEW products_report AS
+SELECT
+	product_id, 
+	manufacturer_id ,
+	product_name, 
+	subcategory, 
+	category 
+FROM gold.dim_products
+
+-- Views manufacturers_report
+CREATE VIEW manufacturers_report AS
+SELECT
+	manufacturer_id,
+	manufacturer_name AS name,
+	manufacturer_logo AS logo
+FROM gold.dim_manufactures 
+
+
+-- Views locations_report 
+CREATE VIEW locations_report AS
+SELECT
+	zip, 
+	district, 
+	city, 
+	region, 
+	country_state  As state,
+	country 
+FROM gold.dim_locations 
 
 
 
