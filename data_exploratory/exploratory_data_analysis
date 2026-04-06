@@ -1,0 +1,189 @@
+/*
+==============================================================
+Exploratory Data Analysis 
+==============================================================
+Script Purpose:
+	This script performs the exploratory data analysis of the tables 'gold.dim_locations', 
+	'gold.dim_products', 'gold.dim_manufactures' and 'gold.fact_sales'. 
+
+	It performs the following tasks:
+	
+	- Dimensions Exploration
+	- Date Exploratory
+	- Measure Exploration
+	- Magnitude Exploration
+	- Ranking Exploration 
+==============================================================
+*/
+
+-- -----------------------------
+-- Dimensions Exploration 
+-- -----------------------------
+-- 1. Unique Values Eploration
+
+-- Regions 
+SELECT 
+	DISTINCT region
+FROM gold.dim_locations; 
+
+-- Manufacturers (14)
+SELECT  
+	DISTINCT manufacturer_name
+FROM gold.dim_manufactures;
+
+-- Categories (Mix, Urban, Youth and Rural) 
+SELECT  
+	DISTINCT category
+FROM gold.dim_products;
+
+-- Subcategories (Moderation, Extreme, Select, All Season, Convenience, Youth, Productivity, Regular
+SELECT  
+	DISTINCT subcategory
+FROM gold.dim_products; 
+
+-- Countries (Australia, Canada, Germany, Japan, Mexico, Nigeria, USA)
+SELECT  
+	DISTINCT country 
+FROM gold.fact_sales; 
+
+-- 2. Date Exploration  
+-- Date Scope (Vanarsdel has been operating since 2012). 
+SELECT 
+	MIN(order_date) ealiest_date,
+	MAX(order_date) latest_date,
+	DATEDIFF(MONTH,MIN(order_date),MAX(order_date)) timespan_months,
+	DATEDIFF(YEAR,MIN(order_date),MAX(order_date)) timespan_years,
+	DATEDIFF(YEAR,MIN(order_date),GETDATE()) timespan_today
+FROM gold.fact_sales; 
+
+-- -----------------------------
+-- Measures Exploration 
+-- -----------------------------
+
+-- Find the Total Sales
+SELECT *
+FROM(
+SELECT 
+	s.quantity AS quantity,
+	p.unit_price AS price,
+	s.revenue AS total_amount
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_id = p.product_id) SUB
+WHERE total_amount = quantity * price;
+
+-- Total amount of sales 3.650.953.357.52
+SELECT 
+	SUM(s.quantity * p.unit_price) total_sales
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_id = p.product_id
+
+-- Find the average selling price 539.451 
+SELECT 
+	ROUND(AVG(unit_price),2) AS avg_price
+FROM gold.dim_products
+
+-- Find the total number of products 2075 
+SELECT 
+	COUNT( DISTINCT product_name) AS number_productsline
+FROM gold.dim_products
+
+-- Aggregate big number (Metrics)
+SELECT 
+	'total_sales' AS measure_name, SUM(s.quantity * p.unit_price) AS measure_value 
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_id = p.product_id
+
+	UNION ALL 
+
+SELECT 
+	'avg_price', ROUND(AVG(unit_price),2) 
+FROM gold.dim_products
+
+	UNION ALL
+
+SELECT 
+	'products_category',   COUNT(DISTINCT category) 
+FROM gold.dim_products
+
+	UNION ALL
+
+SELECT 
+	'products_line', COUNT(DISTINCT product_name) 
+FROM gold.dim_products
+
+	UNION ALL
+
+SELECT  
+	'number_countries', COUNT(DISTINCT country)
+FROM gold.fact_sales;
+
+-- -----------------------------
+-- Magnitude Exploration 
+-- -----------------------------
+-- What is the sales distribution of items across countries?
+SELECT 
+	s.country, 
+	SUM(s.quantity * p.unit_price) total_sales
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_id = p.product_id
+GROUP BY s.country
+ORDER BY total_sales DESC ;
+
+-- What is the sales distribution by manufacturers ? 
+SELECT 
+	m.manufacturer_name, 
+	SUM(s.quantity * p.unit_price) total_sales
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_id = p.product_id
+LEFT JOIN gold.dim_manufactures m
+ON m.manufacturer_id = p.manufacturer_id
+GROUP BY m.manufacturer_name
+ORDER BY total_sales DESC ;
+
+-- What is the average price in each category ?
+SELECT 
+	category,
+	ROUND(AVG(unit_price),2) AS avg_price
+FROM gold.dim_products
+GROUP BY category
+ORDER BY avg_price DESC;
+
+-- What is the total revenue generated for each category?
+
+SELECT 
+	p.category, 
+	SUM(s.quantity * p.unit_price) total_sales
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_id = p.product_id
+GROUP BY p.category
+ORDER BY total_sales DESC;
+
+-- -----------------------------
+-- Ranking Exploration
+-- -----------------------------
+
+-- Which 5 products generate the highest revenue?
+SELECT TOP 5
+	p.product_name, 
+	SUM(s.quantity * p.unit_price) total_sales
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_id = p.product_id
+GROUP BY p.product_name
+ORDER BY total_sales DESC;
+
+-- What are the 5 worst performing products in terms of sales?
+SELECT TOP 5
+	p.product_name, 
+	SUM(s.quantity * p.unit_price) total_sales
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_id = p.product_id
+GROUP BY p.product_name
+ORDER BY total_sales ASC;
