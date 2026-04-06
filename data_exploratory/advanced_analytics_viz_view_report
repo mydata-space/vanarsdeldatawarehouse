@@ -1,0 +1,144 @@
+/*
+==============================================================
+Busniess Analytics and Sales View Report for BI viz
+==============================================================
+Script Purpose:
+
+	This script performs advanced data analytics to answer business questions 
+	and derive insights from the dataset. 
+
+	It performs the following tasks:
+		1. Change over time trends analysis 
+		2. Cumulative analysis 
+		3. Performance analysis
+		4. Part to whole analysis
+
+	Further, it creates a view report that consolidates measure and important 
+	aggregation for BI viz
+
+	Highlights:
+		-  
+		-  
+		-  
+==============================================================
+*/
+
+-- 1. Change over time trend analysis  
+-- Analyze the performance of sales over the years. 
+SELECT 
+	DATETRUNC(YEAR,s.order_date) AS year_month,
+	SUM(quantity * unit_price) AS total_sales
+ FROM gold.fact_sales s 
+ LEFT JOIN gold.dim_products p 
+ ON s.product_id = p.product_id
+ GROUP BY DATETRUNC(YEAR,s.order_date)
+ ORDER BY total_sales DESC;
+ -- Observation : the total sales grew over the year gradually 
+
+-- 2.Cumulative analysis 
+-- Find the total monthly sales and the running total
+WITH sales_amount_year AS
+(
+	SELECT 
+		DATETRUNC(YEAR,s.order_date) AS year_month,
+		SUM(quantity * unit_price) AS total_sales
+	 FROM gold.fact_sales s 
+	 LEFT JOIN gold.dim_products p 
+	 ON s.product_id = p.product_id
+	 GROUP BY DATETRUNC(YEAR,s.order_date)
+ )
+ SELECT 
+	year_month,
+	total_sales,
+	SUM(total_sales) OVER( ORDER BY year_month) AS running_total
+FROM sales_amount_year; 
+
+-- 3. Performance analysis 
+-- Comparison analysis total yearly sales the previous year sales as well as the average sales  
+WITH sales_performance AS 
+(
+	SELECT
+		year_month,
+		total_sales,
+		AVG(total_sales) OVER() AS avg_sales,
+		LAG(total_sales) OVER(ORDER BY year_month) AS py_sales
+	FROM(
+	SELECT
+		DATETRUNC(YEAR,s.order_date) AS year_month,
+		SUM(quantity * unit_price) AS total_sales
+	FROM gold.fact_sales s 
+	LEFT JOIN gold.dim_products p 
+	ON s.product_id = p.product_id
+	GROUP BY DATETRUNC(YEAR,s.order_date)) AS retrieve_columns 
+)
+SELECT sp.*,
+	CASE 
+	WHEN py_sales IS NULL THEN '-' 
+	WHEN total_sales > py_sales THEN 'sales increase' 
+	WHEN total_sales < py_sales THEN 'sales decrease' 
+	ELSE 'sales balance' END AS sales_performace,
+		CASE 
+	WHEN total_sales > avg_sales THEN 'above the average' 
+	WHEN total_sales < avg_sales THEN 'below the average' 
+	ELSE 'exact average' END AS sales_target
+FROM sales_performance sp; 
+
+-- 4. Part to whole analysis 
+-- Which category contribute the most to the overall sales, similarely
+
+WITH category_contribution AS
+(
+	SELECT
+		category,
+		total_sales,
+		SUM(total_sales) OVER() AS global_sales
+	FROM(
+	SELECT
+		p.category,
+		SUM(quantity * unit_price) AS total_sales
+	FROM gold.fact_sales s 
+	LEFT JOIN gold.dim_products p 
+	ON s.product_id = p.product_id
+	GROUP BY p.category) AS category_performance
+)
+SELECT 
+	cc.*,
+	CONCAT(ROUND(CAST(total_sales AS FLOAT) * 100 / global_sales,2),'%')
+	AS sales_contribution 
+FROM category_contribution cc
+ORDER BY sales_contribution  DESC; 
+
+-- Which country contribute the most to the overall sales
+WITH country_contribution AS
+(
+	SELECT
+		country,
+		total_sales,
+		SUM(total_sales) OVER() AS global_sales
+	FROM(
+	SELECT
+		country,
+		SUM(quantity * unit_price) AS total_sales
+	FROM gold.fact_sales s 
+	LEFT JOIN gold.dim_products p 
+	ON s.product_id = p.product_id
+	GROUP BY country) AS country_performance
+)
+SELECT 
+	cc.*,
+	CONCAT(ROUND(CAST(total_sales AS FLOAT) * 100 / global_sales,2),'%')
+	AS sales_contribution 
+FROM country_contribution cc; 
+
+
+-- 5. Create a ready to sue report  for BI viz 
+/* In this section you need to collect very important column and aggregate 
+others measure to put in one object. 
+*/ 
+
+
+
+
+
+
+
