@@ -1,6 +1,6 @@
 /*
 ==============================================================
-Busniess Analytics and Sales View Report for BI viz
+Busniess Analytics and BI View Report for BI viz
 ==============================================================
 Script Purpose:
 
@@ -13,15 +13,17 @@ Script Purpose:
 		3. Performance analysis
 		4. Part to whole analysis
 
-	Further, it creates a view report that consolidates measure and important 
-	aggregation for BI viz
+	Further, it creates a view report that select important 
+	columns for business intelligence report. 
 
-	Highlights:
-		-  
-		-  
-		-  
+	BI Report Views :
+		-  dim  locations
+		-  dim products
+		-  dim manufacturer
+		-  fact sales 
 ==============================================================
 */
+-- I. Advanced Busniess Analytics
 
 -- 1. Change over time trend analysis  
 -- Analyze the performance of sales over the years. 
@@ -179,6 +181,46 @@ SELECT
 	country_state  As state,
 	country 
 FROM gold.dim_locations 
+
+
+-- II. BI View Report
+
+CREATE VIEW dim_products AS
+SELECT  product_id 
+      , manufacturer_id 
+      , product_name 
+      , subcategory 
+      , category 
+      , unit_price 
+FROM  gold.dim_products;
+
+CREATE VIEW dim_manufactures AS
+SELECT  manufacturer_id 
+      , manufacturer_name 
+      , manufacturer_logo 
+FROM  gold.dim_manufactures; 
+
+CREATE VIEW dim_locations AS
+SELECT
+        CONCAT(zip, '', country) AS zip_country
+        -- Create primary key 'zip_country' to connect fact sales and dim locations
+      , city 
+      , country 
+FROM  gold.dim_locations;
+ 
+CREATE VIEW fact_sales AS
+SELECT  product_id
+      , CONCAT(zip, '', country) AS zip_country
+      -- Create primary key 'zip_country' to connect fact sales and dim locations
+      , order_date 
+      , quantity 
+      , revenue 
+FROM  gold.fact_sales; 
+
+
+
+
+
 
 
 
