@@ -2,9 +2,10 @@
 
 # 📖  Full Data Warehouse, ETL, Analytics and BI Project
 Welcome to the Full Data Warehouse, ETL, Analytics and BI report Project repository!
-This project demonstrates a comprehensive understanding and a strong SQL server coding skills on build  full modern datawarehouse archicture
-that loads more than 7.4 millions of rows from two sources (CRM and ERP), performing ETL, advanced analytics as well as Power BI vizs.
-Furthermore, the project highlights industry best practices in data engineering and data analysis.
+This project highlights industry best practices in data engineering and data analysis, loads over 7.4 millions of rows data 
+from two sources (CRM and ERP) demonstrating a comprehensive understanding and strong SQL server coding skills 
+on build full modern datawarehouse archicture, performing ETL, advanced analytics and Power BI vizs.
+
 ***
 
 ## :books: Project Overview 
