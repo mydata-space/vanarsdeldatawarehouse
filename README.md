@@ -44,5 +44,11 @@ Develop a modern Power BI report to track the vendors performance and refresh da
 
 Hi there! I'm Christ GHABAKO, I'm an MBA of business analytics and entreprise information systems.
 My responsability is to help businesses to process, analyze and consume data efficiently and effectively. 
+
+## Resume of the report 
+<img width="1075" height="640" alt="data model (Power BI) " src="https://github.com/user-attachments/assets/526d3a76-eafa-4cc2-bfa3-f345f5348606" />
+<img width="1287" height="721" alt="manufacturer report " src="https://github.com/user-attachments/assets/3f7c75d3-c095-430d-a960-45f34aa98fda" />
+
+
  
   
