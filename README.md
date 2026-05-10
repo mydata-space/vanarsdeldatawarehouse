@@ -42,9 +42,8 @@ Develop a modern Power BI report to track the vendors performance and refresh da
 
 ## ✨ About Me 
 
-Hi there! I'm GHABAKO, data freelance and information system specialist and a graduate of an MBA in business analytics and information systems.
+Hi there! I'm GHABAKO, data freelance and information system specialist(SAP Finance and Controlling consultant).
 My responsability is to help businesses to process, analyze and consume data efficiently and effectively. 
-Furthermore, I am SAP Finance and Controlling consultant. 
 
 ## Report Summary 
 <img width="1075" height="640" alt="data model (Power BI) " src="https://github.com/user-attachments/assets/526d3a76-eafa-4cc2-bfa3-f345f5348606" />
